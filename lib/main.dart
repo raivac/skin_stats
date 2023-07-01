@@ -43,7 +43,12 @@ class _HomeScreenState extends State<HomeScreen> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return _splashScreen();
         } else if (snapshot.hasError) {
-          return const Text('Error al obtener los datos');
+          return Scaffold(
+            body: const Text('Error al obtener los datos'),
+            appBar: AppBar(
+              title: const Text('Skin Stats'),
+            ),
+          );
         } else {
           final itemList = snapshot.data!;
           return _itemListWidget(itemList);
@@ -58,12 +63,10 @@ class _HomeScreenState extends State<HomeScreen> {
       body: ListView.builder(
         itemCount: itemList.length,
         itemBuilder: (context, index) {
-          // print(itemList);
           final content = itemList[index];
           final title = content['title'] ?? '';
           final steamPrice =
               content['steamPrice'] ?? 'Error al cargar el precio';
-          final realPrice = content['realPrice'] ?? 'Error al cargar el precio';
           final imageRoute = content['imageRoute'] ?? 'Error';
 
           return Padding(
@@ -90,55 +93,100 @@ class _HomeScreenState extends State<HomeScreen> {
                         width: 100,
                       ),
                     ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            'Precio Steam: $steamPrice',
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            'Precio Real: $realPrice',
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                        ],
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => WillPopScope(
-                              onWillPop: () async {
-                                FlutterWebviewPlugin flutterWebViewPlugin =
-                                    FlutterWebviewPlugin();
-                                flutterWebViewPlugin.close();
-                                return true;
-                              },
-                              child: WebviewScaffold(
-                                url: ItemList()
-                                    .itemList
-                                    .entries
-                                    .toList()[index]
-                                    .value
-                                    .toString(),
-                                appBar: AppBar(
-                                  title: const Text('Skin Stats'),
+                    Column(
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              'Precio Steam: $steamPrice',
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          children: [
+                            OutlinedButton(
+                              style: OutlinedButton.styleFrom(
+                                foregroundColor: Colors.blue,
+                                side: const BorderSide(
+                                  color: Colors.blue,
                                 ),
                               ),
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => WillPopScope(
+                                      onWillPop: () async {
+                                        FlutterWebviewPlugin
+                                            flutterWebViewPlugin =
+                                            FlutterWebviewPlugin();
+                                        flutterWebViewPlugin.close();
+                                        return true;
+                                      },
+                                      child: WebviewScaffold(
+                                        url: ItemList()
+                                            .itemList
+                                            .entries
+                                            .toList()[index]
+                                            .value
+                                            .toString(),
+                                        appBar: AppBar(
+                                          title: const Text('Skin Stats'),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: const Text('Ir a Steam'),
                             ),
-                          ),
-                        );
-                      },
-                      icon: const Icon(Icons.arrow_right),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            OutlinedButton(
+                              style: OutlinedButton.styleFrom(
+                                foregroundColor: Colors.blue,
+                                side: const BorderSide(
+                                  color: Colors.blue,
+                                ),
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => WillPopScope(
+                                      onWillPop: () async {
+                                        FlutterWebviewPlugin
+                                            flutterWebViewPlugin =
+                                            FlutterWebviewPlugin();
+                                        flutterWebViewPlugin.close();
+                                        return true;
+                                      },
+                                      child: WebviewScaffold(
+                                        url: ItemList()
+                                            .itemList
+                                            .entries
+                                            .toList()[index]
+                                            .value
+                                            .toString(),
+                                        appBar: AppBar(
+                                          title: const Text('Skin Stats'),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: const Text('Ir a Buff'),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -205,7 +253,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<List<Map<String, String?>>> _fetchData() async {
     List<Map<String, String?>> itemList = [];
-
     for (var entry in ItemList().itemList.entries) {
       final responseSteam = await http.get(entry.value);
       final documentSteam = parser.parse(responseSteam.body);
@@ -217,8 +264,6 @@ class _HomeScreenState extends State<HomeScreen> {
           .querySelector('.market_listing_price.market_listing_price_with_fee')!
           .text
           .trim();
-      steamPrice = steamPrice;
-      String? realPrice = steamPrice;
 
       final imageElement =
           documentSteam.querySelector('.market_listing_largeimage img');
@@ -228,7 +273,6 @@ class _HomeScreenState extends State<HomeScreen> {
         'title': title,
         'steamPrice': steamPrice,
         'imageRoute': imageRoute,
-        'realPrice': realPrice
       };
 
       if (imageRoute != null && title != "Steam Community :: Error") {
