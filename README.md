@@ -1,16 +1,14 @@
 # skin_stats
 
-A new Flutter project.
+<!-- 
+https://kamalbunkar.medium.com/how-to-remove-white-splash-screen-from-flutter-app-1f240bd154c 
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+Abre el archivo styles.xml ubicado en la carpeta res/values de tu proyecto de Flutter.
+Dentro del archivo styles.xml, agrega o modifica la siguiente línea dentro del bloque <resources>:
 
-A few resources to get you started if this is your first Flutter project:
+<style name="LaunchTheme" parent="@android:style/Theme.NoDisplay">
+    <item name="android:windowBackground">@drawable/launch_background</item>
+</style>
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+-->
