@@ -44,9 +44,26 @@ class _HomeScreenState extends State<HomeScreen> {
           return _splashScreen();
         } else if (snapshot.hasError) {
           return Scaffold(
-            body: const Text('Error al obtener los datos'),
+            body: const Center(child: Text('Error al obtener los datos')),
             appBar: AppBar(
-              title: const Text('Skin Stats'),
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Skin Stats'),
+                  IconButton(
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext context) => super.widget));
+                    },
+                    icon: const Icon(
+                      Icons.refresh,
+                      size: 35,
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
         } else {
@@ -59,7 +76,26 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Scaffold _itemListWidget(List<Map<String, String?>> itemList) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Skin Stats')),
+      appBar: AppBar(
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text('Skin Stats'),
+            IconButton(
+              onPressed: () {
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => super.widget));
+              },
+              icon: const Icon(
+                Icons.refresh,
+                size: 35,
+              ),
+            ),
+          ],
+        ),
+      ),
       body: ListView.builder(
         itemCount: itemList.length,
         itemBuilder: (context, index) {
@@ -137,7 +173,27 @@ class _HomeScreenState extends State<HomeScreen> {
                                             .value
                                             .toString(),
                                         appBar: AppBar(
-                                          title: const Text('Skin Stats'),
+                                          title: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              const Text('Skin Stats'),
+                                              IconButton(
+                                                onPressed: () {
+                                                  Navigator.pushReplacement(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (BuildContext
+                                                                  context) =>
+                                                              super.widget));
+                                                },
+                                                icon: const Icon(
+                                                  Icons.refresh,
+                                                  size: 35,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -175,7 +231,27 @@ class _HomeScreenState extends State<HomeScreen> {
                                             .value
                                             .toString(),
                                         appBar: AppBar(
-                                          title: const Text('Skin Stats'),
+                                          title: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              const Text('Skin Stats'),
+                                              IconButton(
+                                                onPressed: () {
+                                                  Navigator.pushReplacement(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (BuildContext
+                                                                  context) =>
+                                                              super.widget));
+                                                },
+                                                icon: const Icon(
+                                                  Icons.refresh,
+                                                  size: 35,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ),
