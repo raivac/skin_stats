@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-// ignore: depend_on_referenced_packages
 import 'package:html/parser.dart' as parser;
 import 'package:http/http.dart' as http;
 
@@ -35,13 +34,27 @@ class MyHomePage extends StatefulWidget {
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  Future<String> fetchData() async {
+  Future<Map<String, String?>> fetchData() async {
     final response = await http.get(Uri.parse(
         'https://steamcommunity.com/market/listings/730/%E2%98%85%20Butterfly%20Knife%20%7C%20Stained%20%28Field-Tested%29'));
     final document = parser.parse(response.body);
     final String? title = document.querySelector('title')?.text;
+    final String? minimumSalePrice = document
+        .querySelector('.market_listing_price.market_listing_price_with_fee')
+        ?.text
+        .trim();
 
-    return title ?? '';
+    final String? instantSalePrice = document
+        .querySelector('.market_commodity_orders_header_promote')
+        ?.text
+        .trim();
+
+    Map<String, String?> content = {
+      'title': title,
+      'minimumSalePrice': minimumSalePrice,
+      'instantSalePrice': instantSalePrice
+    };
+    return content;
   }
 
   @override
@@ -53,22 +66,25 @@ class HomeScreen extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(15),
         child: SizedBox(
-          child: FutureBuilder<String>(
+          child: FutureBuilder<Map<String, String?>>(
             future: fetchData(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Column(
                   mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
+                    SizedBox(
+                      height: 150,
+                    ),
                     Text(
                       'Cargando datos',
                       style: TextStyle(
-                        fontSize: 25,
+                        fontSize: 30,
                       ),
                     ),
                     SizedBox(
-                      height: 20,
+                      height: 90,
                     ),
                     SpinKitFadingCircle(
                       color: Colors.white,
@@ -79,17 +95,34 @@ class HomeScreen extends StatelessWidget {
               } else if (snapshot.hasError) {
                 return const Text('Error al obtener los datos');
               } else {
-                final title = snapshot.data ?? '';
-                return Column(
-                  children: [
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                final content = snapshot.data ?? {};
+                final title = content['title'] ?? '';
+                final minimumSalePrice =
+                    content['minimumSalePrice'] ?? 'Error al cargar el precio';
+                final instantSalePrice =
+                    content['instantSalePrice'] ?? 'Error al cargar el precio';
+                return SizedBox(
+                  width: double.infinity,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(
+                        title,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Text('Venta mas baja: $minimumSalePrice'),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Text('Venta instantanea: $instantSalePrice'),
+                    ],
+                  ),
                 );
               }
             },
