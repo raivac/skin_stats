@@ -45,14 +45,20 @@ class HomeScreen extends StatelessWidget {
         .trim();
 
     final String? instantSalePrice = document
-        .querySelector('.market_commodity_orders_header_promote')
-        ?.text
+        .querySelector(
+            '#market_commodity_buyreqeusts_table tbody tr:nth-child(2) td')
+        ?.innerHtml
         .trim();
+
+    final imageElement =
+        document.querySelector('.market_listing_largeimage img');
+    final imageRoute = imageElement?.attributes['src'];
 
     Map<String, String?> content = {
       'title': title,
       'minimumSalePrice': minimumSalePrice,
-      'instantSalePrice': instantSalePrice
+      'instantSalePrice': instantSalePrice,
+      'imageRoute': imageRoute
     };
     return content;
   }
@@ -101,6 +107,7 @@ class HomeScreen extends StatelessWidget {
                     content['minimumSalePrice'] ?? 'Error al cargar el precio';
                 final instantSalePrice =
                     content['instantSalePrice'] ?? 'Error al cargar el precio';
+                final imageRoute = content['imageRoute'] ?? 'Error';
                 return SizedBox(
                   width: double.infinity,
                   child: Column(
@@ -113,14 +120,23 @@ class HomeScreen extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(
-                        height: 10,
+                      Row(
+                        children: [
+                          Column(
+                            children: [
+                              Image.network(imageRoute),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Text('Venta mas baja: $minimumSalePrice'),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Text('Venta instantanea: $instantSalePrice'),
+                            ],
+                          ),
+                        ],
                       ),
-                      Text('Venta mas baja: $minimumSalePrice'),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text('Venta instantanea: $instantSalePrice'),
                     ],
                   ),
                 );
