@@ -4,7 +4,9 @@ import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 // ignore: depend_on_referenced_packages
 import 'package:html/parser.dart' as parser;
 import 'package:http/http.dart' as http;
-import 'package:skin_stats/items/item_list.dart';
+import 'package:skin_stats/item_routes/item_list.dart';
+
+import 'item_routes/item_buff_list.dart';
 
 void main() {
   runApp(const MyApp());
@@ -166,8 +168,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                         return true;
                                       },
                                       child: WebviewScaffold(
-                                        url: ItemList()
-                                            .itemList
+                                        url: ItemBuffList()
+                                            .itemBuffList
                                             .entries
                                             .toList()[index]
                                             .value
@@ -200,7 +202,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 );
                               },
-                              child: const Text('Ir a Steam'),
+                              child: const Text('Ir a Buff'),
                             ),
                             const SizedBox(
                               width: 10,
@@ -258,7 +260,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 );
                               },
-                              child: const Text('Ir a Buff'),
+                              child: const Text('Ir a Steam'),
                             ),
                           ],
                         ),
