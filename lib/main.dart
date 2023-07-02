@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 // ignore: depend_on_referenced_packages
 import 'package:html/parser.dart' as parser;
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:skin_stats/item_routes/item_steam_list.dart';
+import 'package:skin_stats/widgets/calculatort_widget.dart';
+import 'package:skin_stats/widgets/splash_screen_widget.dart';
 
 import 'item_routes/item_buff_list.dart';
 import 'item_routes/item_dmarket_list copy.dart';
@@ -46,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
       future: _fetchData(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return _splashScreen();
+          return const SplashScreenWidget();
         } else if (snapshot.hasError) {
           return Scaffold(
             body: const Center(
@@ -85,98 +86,105 @@ class _HomeScreenState extends State<HomeScreen> {
   Scaffold _itemListWidget(List<Map<String, String?>> itemList) {
     return Scaffold(
       appBar: _appbar(),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: ListView.builder(
-          itemCount: itemList.length,
-          itemBuilder: (context, index) {
-            final content = itemList[index];
-            final title = content['title'] ?? '';
-            final steamPrice =
-                content['steamPrice'] ?? 'Error al cargar el precio';
-            final realPrice =
-                content['realPrice'] ?? 'Error al cargar el precio';
-            final imageRoute = content['imageRoute'] ?? 'Error';
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                if (title.isNotEmpty)
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                Column(
-                  children: [
-                    Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(right: 15.0),
-                          child: Image.network(
-                            imageRoute,
-                            width: 110,
+      body: Column(
+        children: [
+          CalculatorWidget(),
+          Expanded(
+            child: ListView.builder(
+              itemCount: itemList.length,
+              itemBuilder: (context, index) {
+                final content = itemList[index];
+                final title = content['title'] ?? '';
+                final steamPrice =
+                    content['steamPrice'] ?? 'Error al cargar el precio';
+                final realPrice =
+                    content['realPrice'] ?? 'Error al cargar el precio';
+                final imageRoute = content['imageRoute'] ?? 'Error';
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      if (title.isNotEmpty)
+                        Text(
+                          title,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Precio Steam: $steamPrice',
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            Text(
-                              'Precio Real: $realPrice',
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        _redirectButton(
-                          index,
-                          'Steam',
-                          ItemSteamList(),
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        _redirectButton(
-                          index,
-                          'Buff',
-                          ItemBuffList(),
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        _redirectButton(
-                          index,
-                          'DMarket',
-                          ItemDMarketList(),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                const Divider(
-                  color: Color.fromARGB(255, 219, 219, 219),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-              ],
-            );
-          },
-        ),
+                      Column(
+                        children: [
+                          Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(right: 15.0),
+                                child: Image.network(
+                                  imageRoute,
+                                  width: 110,
+                                ),
+                              ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Precio Steam: $steamPrice',
+                                  ),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  Text(
+                                    'Precio Real: $realPrice',
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              _redirectButton(
+                                index,
+                                'Steam',
+                                ItemSteamList(),
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              _redirectButton(
+                                index,
+                                'Buff',
+                                ItemBuffList(),
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              _redirectButton(
+                                index,
+                                'DMarket',
+                                ItemDMarketList(),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      const Divider(
+                        color: Color.fromARGB(255, 219, 219, 219),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -215,54 +223,6 @@ class _HomeScreenState extends State<HomeScreen> {
           style: const TextStyle(
             fontSize: 13,
           ),
-        ),
-      ),
-    );
-  }
-
-  Scaffold _splashScreen() {
-    return const Scaffold(
-      body: SizedBox(
-        width: double.infinity,
-        child: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.only(top: 75),
-              child: Text(
-                'Skin Stats',
-                style: TextStyle(
-                  fontSize: 40,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 130,
-            ),
-            Text(
-              'Cargando datos',
-              style: TextStyle(
-                fontSize: 30,
-              ),
-            ),
-            SizedBox(
-              height: 70,
-            ),
-            SpinKitFadingCircle(
-              color: Colors.white,
-              size: 60.0,
-            ),
-            Spacer(),
-            Padding(
-              padding: EdgeInsets.only(bottom: 25),
-              child: Text(
-                'by raivac',
-                style: TextStyle(
-                  fontSize: 12,
-                ),
-              ),
-            ),
-          ],
         ),
       ),
     );
