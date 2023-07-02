@@ -1,5 +1,5 @@
 class ItemBuffList {
-  Map<String, String> itemBuffList = {
+  Map<String, String> itemList = {
     'butterflyStainedFT': 'https://buff.163.com/goods/42584',
     'sirDarryl': 'https://buff.163.com/goods/835613',
     'akCartelMW': 'https://buff.163.com/goods/33878',

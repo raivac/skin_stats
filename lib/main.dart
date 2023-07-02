@@ -4,9 +4,12 @@ import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 // ignore: depend_on_referenced_packages
 import 'package:html/parser.dart' as parser;
 import 'package:http/http.dart' as http;
-import 'package:skin_stats/item_routes/item_list.dart';
+import 'package:intl/intl.dart';
+import 'package:skin_stats/item_routes/item_steam_list.dart';
 
 import 'item_routes/item_buff_list.dart';
+import 'item_routes/item_dmarket_list copy.dart';
+import 'item_routes/item_titles.dart';
 
 void main() {
   runApp(const MyApp());
@@ -46,7 +49,9 @@ class _HomeScreenState extends State<HomeScreen> {
           return _splashScreen();
         } else if (snapshot.hasError) {
           return Scaffold(
-            body: const Center(child: Text('Error al obtener los datos')),
+            body: const Center(
+              child: Text('Error al obtener los datos'),
+            ),
             appBar: AppBar(
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -55,9 +60,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   IconButton(
                     onPressed: () {
                       Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (BuildContext context) => super.widget));
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) => super.widget),
+                      );
                     },
                     icon: const Icon(
                       Icons.refresh,
@@ -78,38 +84,20 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Scaffold _itemListWidget(List<Map<String, String?>> itemList) {
     return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Text('Skin Stats'),
-            IconButton(
-              onPressed: () {
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) => super.widget));
-              },
-              icon: const Icon(
-                Icons.refresh,
-                size: 35,
-              ),
-            ),
-          ],
-        ),
-      ),
-      body: ListView.builder(
-        itemCount: itemList.length,
-        itemBuilder: (context, index) {
-          final content = itemList[index];
-          final title = content['title'] ?? '';
-          final steamPrice =
-              content['steamPrice'] ?? 'Error al cargar el precio';
-          final imageRoute = content['imageRoute'] ?? 'Error';
-
-          return Padding(
-            padding: const EdgeInsets.all(15),
-            child: Column(
+      appBar: _appbar(),
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: ListView.builder(
+          itemCount: itemList.length,
+          itemBuilder: (context, index) {
+            final content = itemList[index];
+            final title = content['title'] ?? '';
+            final steamPrice =
+                content['steamPrice'] ?? 'Error al cargar el precio';
+            final realPrice =
+                content['realPrice'] ?? 'Error al cargar el precio';
+            final imageRoute = content['imageRoute'] ?? 'Error';
+            return Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 if (title.isNotEmpty)
@@ -120,176 +108,125 @@ class _HomeScreenState extends State<HomeScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                Column(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: Image.network(
-                        imageRoute!,
-                        width: 100,
-                      ),
-                    ),
-                    Column(
+                    Row(
                       children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 15.0),
+                          child: Image.network(
+                            imageRoute,
+                            width: 110,
+                          ),
+                        ),
                         Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const SizedBox(
-                              height: 10,
-                            ),
                             Text(
                               'Precio Steam: $steamPrice',
                             ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          children: [
-                            OutlinedButton(
-                              style: OutlinedButton.styleFrom(
-                                foregroundColor: Colors.blue,
-                                side: const BorderSide(
-                                  color: Colors.blue,
-                                ),
-                              ),
-                              onPressed: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => WillPopScope(
-                                      onWillPop: () async {
-                                        FlutterWebviewPlugin
-                                            flutterWebViewPlugin =
-                                            FlutterWebviewPlugin();
-                                        flutterWebViewPlugin.close();
-                                        return true;
-                                      },
-                                      child: WebviewScaffold(
-                                        url: ItemBuffList()
-                                            .itemBuffList
-                                            .entries
-                                            .toList()[index]
-                                            .value
-                                            .toString(),
-                                        appBar: AppBar(
-                                          title: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              const Text('Skin Stats'),
-                                              IconButton(
-                                                onPressed: () {
-                                                  Navigator.pushReplacement(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (BuildContext
-                                                                  context) =>
-                                                              super.widget));
-                                                },
-                                                icon: const Icon(
-                                                  Icons.refresh,
-                                                  size: 35,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                              child: const Text('Ir a Buff'),
-                            ),
                             const SizedBox(
-                              width: 10,
+                              height: 20,
                             ),
-                            OutlinedButton(
-                              style: OutlinedButton.styleFrom(
-                                foregroundColor: Colors.blue,
-                                side: const BorderSide(
-                                  color: Colors.blue,
-                                ),
-                              ),
-                              onPressed: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => WillPopScope(
-                                      onWillPop: () async {
-                                        FlutterWebviewPlugin
-                                            flutterWebViewPlugin =
-                                            FlutterWebviewPlugin();
-                                        flutterWebViewPlugin.close();
-                                        return true;
-                                      },
-                                      child: WebviewScaffold(
-                                        url: ItemList()
-                                            .itemList
-                                            .entries
-                                            .toList()[index]
-                                            .value
-                                            .toString(),
-                                        appBar: AppBar(
-                                          title: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              const Text('Skin Stats'),
-                                              IconButton(
-                                                onPressed: () {
-                                                  Navigator.pushReplacement(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (BuildContext
-                                                                  context) =>
-                                                              super.widget));
-                                                },
-                                                icon: const Icon(
-                                                  Icons.refresh,
-                                                  size: 35,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                              child: const Text('Ir a Steam'),
+                            Text(
+                              'Precio Real: $realPrice',
                             ),
                           ],
                         ),
                       ],
                     ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        _redirectButton(
+                          index,
+                          'Steam',
+                          ItemSteamList(),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        _redirectButton(
+                          index,
+                          'Buff',
+                          ItemBuffList(),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        _redirectButton(
+                          index,
+                          'DMarket',
+                          ItemDMarketList(),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(top: 10.0),
-                  child: Divider(
-                    color: Color.fromARGB(255, 219, 219, 219),
-                  ),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Divider(
+                  color: Color.fromARGB(255, 219, 219, 219),
+                ),
+                const SizedBox(
+                  height: 10,
                 ),
               ],
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  SizedBox _redirectButton(int index, String text, dynamic items) {
+    return SizedBox(
+      width: 90,
+      height: 30,
+      child: OutlinedButton(
+        style: OutlinedButton.styleFrom(
+          foregroundColor: Colors.blue,
+          side: const BorderSide(
+            color: Colors.blue,
+          ),
+        ),
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => WillPopScope(
+                onWillPop: () async {
+                  FlutterWebviewPlugin flutterWebViewPlugin =
+                      FlutterWebviewPlugin();
+                  flutterWebViewPlugin.close();
+                  return true;
+                },
+                child: WebviewScaffold(
+                  url: items.itemList.entries.toList()[index].value.toString(),
+                  appBar: _appbar(),
+                ),
+              ),
             ),
           );
         },
+        child: Text(
+          text,
+          style: const TextStyle(
+            fontSize: 13,
+          ),
+        ),
       ),
-      extendBody: true,
     );
   }
 
   Scaffold _splashScreen() {
-    return Scaffold(
+    return const Scaffold(
       body: SizedBox(
         width: double.infinity,
         child: Column(
           children: [
-            const Padding(
+            Padding(
               padding: EdgeInsets.only(top: 75),
               child: Text(
                 'Skin Stats',
@@ -299,22 +236,24 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-            const SizedBox(
+            SizedBox(
               height: 130,
             ),
-            SizedBox(
-              width: 200,
-              child: Image.asset('assets/r.png'),
+            Text(
+              'Cargando datos',
+              style: TextStyle(
+                fontSize: 30,
+              ),
             ),
-            const SizedBox(
+            SizedBox(
               height: 70,
             ),
-            const SpinKitThreeBounce(
+            SpinKitFadingCircle(
               color: Colors.white,
-              size: 50.0,
+              size: 60.0,
             ),
-            const Spacer(),
-            const Padding(
+            Spacer(),
+            Padding(
               padding: EdgeInsets.only(bottom: 25),
               child: Text(
                 'by raivac',
@@ -329,35 +268,71 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  AppBar _appbar() {
+    return AppBar(
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Text('Skin Stats'),
+          IconButton(
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext context) => super.widget),
+              );
+            },
+            icon: const Icon(
+              Icons.refresh,
+              size: 30,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Future<List<Map<String, String?>>> _fetchData() async {
     List<Map<String, String?>> itemList = [];
-    for (var entry in ItemList().itemList.entries) {
-      final responseSteam = await http.get(entry.value);
+    for (var entry in ItemBuffList().itemList.entries) {
+      final responseSteam = await http.get(
+        Uri.parse(entry.value),
+      );
       final documentSteam = parser.parse(responseSteam.body);
 
-      String? title = documentSteam.querySelector('title')?.text.trim();
-      title = title?.replaceAll('Steam Community Market :: Listings for', '');
+      String? title = documentSteam.querySelector('h1')?.text.trim();
 
-      String? steamPrice = documentSteam
-          .querySelector('.market_listing_price.market_listing_price_with_fee')!
+      String? steamPriceInDollars = documentSteam
+          .querySelector('strong.f_Strong')!
           .text
-          .trim();
+          .trim()
+          .replaceAll("(", "")
+          .replaceAll(")", "")
+          .replaceAll("\$", "");
+      var realPriceInDollars = double.parse(steamPriceInDollars) -
+          (double.parse(steamPriceInDollars) * 30 / 100);
 
-      final imageElement =
-          documentSteam.querySelector('.market_listing_largeimage img');
+      final imageElement = documentSteam.querySelector('.t_Center img');
       final imageRoute = imageElement?.attributes['src'];
+
+      final numberFormat = NumberFormat.currency(locale: 'es_ES', symbol: '€');
+
+      String? steamPriceInEuros = numberFormat.format(
+        double.parse(steamPriceInDollars),
+      );
+      String? realPriceInEuros = numberFormat.format(
+        realPriceInDollars,
+      );
+      title = titles[title!];
 
       Map<String, String?> content = {
         'title': title,
-        'steamPrice': steamPrice,
+        'steamPrice': steamPriceInEuros,
+        'realPrice': realPriceInEuros,
         'imageRoute': imageRoute,
       };
-
-      if (imageRoute != null && title != "Steam Community :: Error") {
-        itemList.add(content);
-      }
+      itemList.add(content);
     }
-
     return itemList;
   }
 }
