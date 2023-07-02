@@ -32,7 +32,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                 Row(
                   children: [
                     const Text('Moneda de origen'),
-                    const SizedBox(width: 20),
+                    const SizedBox(width: 10),
                     DropdownButton<String>(
                       value: monedaOrigen,
                       onChanged: (String? newValue) {
@@ -47,7 +47,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                 Row(
                   children: [
                     const Text('Convertir a'),
-                    const SizedBox(width: 20),
+                    const SizedBox(width: 10),
                     DropdownButton<String>(
                       value: monedaDestino,
                       onChanged: (String? newValue) {
@@ -73,7 +73,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                     textAlign: TextAlign.center,
                     decoration: const InputDecoration(
                       filled: true,
-                      hintText: '0',
+                      hintText: '0.00',
                     ),
                   ),
                 ),

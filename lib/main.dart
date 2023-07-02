@@ -233,7 +233,11 @@ class _HomeScreenState extends State<HomeScreen> {
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text('Skin Stats'),
+          // const Text('Skin Stats'),
+          Image.asset(
+            'assets/r.png',
+            width: 150,
+          ),
           IconButton(
             onPressed: () {
               Navigator.pushReplacement(
