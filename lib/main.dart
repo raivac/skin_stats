@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 // ignore: depend_on_referenced_packages
 import 'package:html/parser.dart' as parser;
@@ -13,7 +16,16 @@ import 'item_routes/item_dmarket_list copy.dart';
 import 'item_routes/item_titles.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(
+      widgetsBinding: WidgetsFlutterBinding.ensureInitialized());
   runApp(const MyApp());
+  Timer(
+    const Duration(seconds: 3),
+    () {
+      FlutterNativeSplash.remove();
+    },
+  );
 }
 
 class MyApp extends StatelessWidget {

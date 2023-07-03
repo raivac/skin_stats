@@ -19,6 +19,10 @@ dependencies:
   flutter_webview_plugin: ^0.4.0
   intl: ^0.18.1
 
+flutter_native_splash:
+  color: "#2e2e2e"
+  image: assets/r.png
+  android: true
 
 dev_dependencies:
   flutter_test:
