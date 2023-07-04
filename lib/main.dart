@@ -7,14 +7,12 @@ import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:html/parser.dart' as parser;
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:skin_stats/item_routes/item_steam_list.dart';
+import 'package:skin_stats/maps/item_steam_list.dart';
+import 'package:skin_stats/screens/splash_screen.dart';
 import 'package:skin_stats/widgets/calculatort_widget.dart';
-import 'package:skin_stats/widgets/recovery_password.dart';
-import 'package:skin_stats/widgets/splash_screen_widget.dart';
 
-import 'item_routes/item_buff_list.dart';
-import 'item_routes/item_dmarket_list copy.dart';
-import 'item_routes/item_titles.dart';
+import 'maps/item_buff_list.dart';
+import 'maps/item_dmarket_list.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -98,16 +96,19 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Scaffold _itemListWidget(List<Map<String, String?>> itemList) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: const Color.fromARGB(255, 207, 204, 204),
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => PasswordRecoveryPage()),
-          );
-        },
-        child: const Icon(Icons.lock_reset),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   backgroundColor: const Color.fromARGB(255, 207, 204, 204),
+      //   onPressed: () {
+      //     Navigator.push(
+      //       context,
+      //       MaterialPageRoute(builder: (context) => PasswordRecoveryPage()),
+      //     );
+      //   },
+      //   child: const Icon(
+      //     Icons.lock_reset,
+      //     size: 30,
+      //   ),
+      // ),
       appBar: appbar(),
       body: Column(
         children: [
@@ -287,7 +288,7 @@ class _HomeScreenState extends State<HomeScreen> {
       );
       final documentSteam = parser.parse(responseSteam.body);
 
-      String? title = documentSteam.querySelector('h1')?.text.trim();
+      String? title = entry.key;
 
       String? steamPriceInDollars = documentSteam
           .querySelector('strong.f_Strong')!
@@ -310,7 +311,6 @@ class _HomeScreenState extends State<HomeScreen> {
       String? realPriceInEuros = numberFormat.format(
         realPriceInDollars,
       );
-      title = titles[title!];
 
       Map<String, String?> content = {
         'title': title,
