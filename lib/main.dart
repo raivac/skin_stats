@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:skin_stats/item_routes/item_steam_list.dart';
 import 'package:skin_stats/widgets/calculatort_widget.dart';
+import 'package:skin_stats/widgets/recovery_password.dart';
 import 'package:skin_stats/widgets/splash_screen_widget.dart';
 
 import 'item_routes/item_buff_list.dart';
@@ -97,7 +98,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Scaffold _itemListWidget(List<Map<String, String?>> itemList) {
     return Scaffold(
-      appBar: _appbar(),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: const Color.fromARGB(255, 207, 204, 204),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => PasswordRecoveryPage()),
+          );
+        },
+        child: const Icon(Icons.lock_reset),
+      ),
+      appBar: appbar(),
       body: Column(
         children: [
           CalculatorWidget(),
@@ -224,7 +235,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
                 child: WebviewScaffold(
                   url: items.itemList.entries.toList()[index].value.toString(),
-                  appBar: _appbar(),
+                  appBar: appbar(),
                 ),
               ),
             ),
@@ -240,7 +251,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  AppBar _appbar() {
+  AppBar appbar() {
     return AppBar(
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
