@@ -14,16 +14,9 @@ dependencies:
   cupertino_icons: ^1.0.2
   device_info: ^2.0.3
   flutter_spinkit: ^5.2.0
-  flutter_native_splash: ^2.3.1
   http: ^0.13.4
   flutter_webview_plugin: ^0.4.0
-  intl: ^0.18.1
-  mailer: ^6.0.1
-
-flutter_native_splash:
-  color: "#2e2e2e"
-  image: assets/r.png
-  android: true
+  html: ^0.15.4
 
 dev_dependencies:
   flutter_test:

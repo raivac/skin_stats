@@ -1,12 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 // ignore: depend_on_referenced_packages
 import 'package:html/parser.dart' as parser;
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
 import 'package:skin_stats/maps/item_steam_list.dart';
 import 'package:skin_stats/screens/splash_screen.dart';
 import 'package:skin_stats/widgets/calculatort_widget.dart';
@@ -15,16 +14,7 @@ import 'maps/item_buff_list.dart';
 import 'maps/item_dmarket_list.dart';
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.preserve(
-      widgetsBinding: WidgetsFlutterBinding.ensureInitialized());
   runApp(const MyApp());
-  Timer(
-    const Duration(seconds: 3),
-    () {
-      FlutterNativeSplash.remove();
-    },
-  );
 }
 
 class MyApp extends StatelessWidget {
@@ -96,23 +86,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Scaffold _itemListWidget(List<Map<String, String?>> itemList) {
     return Scaffold(
-      // floatingActionButton: FloatingActionButton(
-      //   backgroundColor: const Color.fromARGB(255, 207, 204, 204),
-      //   onPressed: () {
-      //     Navigator.push(
-      //       context,
-      //       MaterialPageRoute(builder: (context) => PasswordRecoveryPage()),
-      //     );
-      //   },
-      //   child: const Icon(
-      //     Icons.lock_reset,
-      //     size: 30,
-      //   ),
-      // ),
       appBar: appbar(),
       body: Column(
         children: [
-          CalculatorWidget(),
+          const CalculatorWidget(),
           Expanded(
             child: ListView.builder(
               itemCount: itemList.length,
@@ -281,6 +258,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<List<Map<String, String?>>> _fetchData() async {
+    var apikey = "wkniLduZlbVkoeG9VaFe2wtF8QQ1B7Ll";
     List<Map<String, String?>> itemList = [];
     for (var entry in ItemBuffList().itemList.entries) {
       final responseSteam = await http.get(
@@ -297,28 +275,30 @@ class _HomeScreenState extends State<HomeScreen> {
           .replaceAll("(", "")
           .replaceAll(")", "")
           .replaceAll("\$", "");
-      var realPriceInDollars = double.parse(steamPriceInDollars) -
-          (double.parse(steamPriceInDollars) * 30 / 100);
 
       final imageElement = documentSteam.querySelector('.t_Center img');
       final imageRoute = imageElement?.attributes['src'];
 
-      final numberFormat = NumberFormat.currency(locale: 'es_ES', symbol: '€');
+      try {
+        var responsePS = await http.get(
+            Uri.parse(
+                'https://api.apilayer.com/exchangerates_data/convert?to=EUR&from=USD&amount=$steamPriceInDollars'),
+            headers: {'apikey': apikey});
 
-      String? steamPriceInEuros = numberFormat.format(
-        double.parse(steamPriceInDollars),
-      );
-      String? realPriceInEuros = numberFormat.format(
-        realPriceInDollars,
-      );
-
-      Map<String, String?> content = {
-        'title': title,
-        'steamPrice': steamPriceInEuros,
-        'realPrice': realPriceInEuros,
-        'imageRoute': imageRoute,
-      };
-      itemList.add(content);
+        var data = jsonDecode(responsePS.body);
+        var steamPriceInEuros = data['result'];
+        var realPriceInEuros =
+            steamPriceInEuros - (steamPriceInEuros * 30 / 100);
+        Map<String, String?> content = {
+          'title': title,
+          'steamPrice': steamPriceInEuros.toStringAsFixed(2) + " €",
+          'realPrice': realPriceInEuros.toStringAsFixed(2) + " €",
+          'imageRoute': imageRoute,
+        };
+        itemList.add(content);
+      } catch (e) {
+        print(e);
+      }
     }
     return itemList;
   }

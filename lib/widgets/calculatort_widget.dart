@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class CalculatorWidget extends StatefulWidget {
-  CalculatorWidget({super.key});
+  const CalculatorWidget({super.key});
 
   @override
   State<CalculatorWidget> createState() => _CalculatorWidgetState();
