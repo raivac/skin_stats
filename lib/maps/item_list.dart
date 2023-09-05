@@ -3,6 +3,9 @@ class ItemList {
     'butterflyStainedFT': Uri.parse(
       'https://csgostash.com/skin/463/Butterfly-Knife-Stained',
     ),
+    'SGMogulBS': Uri.parse(
+      'https://csgostash.com/glove/42/Specialist-Gloves-Mogul',
+    ),
     'sirDarryl': Uri.parse(
       'https://csgostash.com/agent/32/Sir-Bloody-Darryl-Royale-The-Professionals',
     ),

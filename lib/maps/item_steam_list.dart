@@ -2,6 +2,8 @@ class ItemSteamList {
   Map<String, String> itemList = {
     'butterflyStainedFT':
         'https://steamcommunity.com/market/listings/730/%E2%98%85%20Butterfly%20Knife%20%7C%20Stained%20%28Field-Tested%29',
+    'SGMogulBS':
+        'https://steamcommunity.com/market/listings/730/%E2%98%85%20Specialist%20Gloves%20%7C%20Mogul%20%28Battle-Scarred%29',
     'sirDarryl':
         'https://steamcommunity.com/market/listings/730/Sir%20Bloody%20Darryl%20Royale%20%7C%20The%20Professionals',
     'akCartelMW':

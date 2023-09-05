@@ -2,6 +2,8 @@ class ItemDMarketList {
   Map<String, String> itemList = {
     'butterflyStainedFT':
         'https://dmarket.com/es/ingame-items/item-list/csgo-skins?category_0=not_stattrak_tm&title=butterfly%20stained%20field%20tested%20',
+    'SGMogulBS':
+        'https://dmarket.com/es/ingame-items/item-list/csgo-skins?title=mogul%20battle%20scarred',
     'sirDarryl':
         'https://dmarket.com/es/ingame-items/item-list/csgo-skins?category_0=not_stattrak_tm&title=darryl%20royale',
     'akCartelMW':

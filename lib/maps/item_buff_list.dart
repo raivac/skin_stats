@@ -2,6 +2,8 @@ class ItemBuffList {
   Map<String, String> itemList = {
     '★ Butterfly Knife | Stained (Field-Tested)':
         'https://buff.163.com/goods/42584',
+    '★ Specialist Gloves | Mogul (Battle-Scarred)':
+        'https://buff.163.com/goods/45491',
     'Sir Bloody Darryl Royale | The Professionals':
         'https://buff.163.com/goods/835613',
     'AK-47 | Cartel (Minimal Wear)': 'https://buff.163.com/goods/33878',
